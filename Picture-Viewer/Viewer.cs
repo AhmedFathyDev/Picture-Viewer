@@ -15,10 +15,78 @@ namespace Picture_Viewer
     {
         public Viewer()
         {
-            this.pictures = new List<string>();
-            InitializeComponent();
-        }
+            this.InitializeComponent();
 
+            this.defaultMode = new ToolStripMenuItem
+            {
+                Name = "defaultMode",
+                Size = new Size(155, 22),
+                Text = "Default Mode",
+                Visible = false
+            };
+            this.defaultMode.Click += new EventHandler(this.defaultMode_Click);
+            this.operationalModes.Items.Add(this.defaultMode);
+
+            this.pictureBox1 = new PictureBox
+            {
+                BackColor = Color.Transparent,
+                Location = new Point(218, 12),
+                Name = "pictureBox1",
+                Size = new Size(504, 360),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Visible = false
+            };
+            this.Controls.Add(this.pictureBox1);
+
+            this.btnRight = new Button
+            {
+                BackgroundImage = Properties.Resources.Right_icon,
+                BackgroundImageLayout = ImageLayout.Stretch,
+                Location = new Point(647, 378),
+                Name = "btnRight",
+                Size = new Size(75, 56),
+                Visible = false
+            };
+            this.btnRight.Click += new EventHandler(this.btnRight_Click);
+            this.Controls.Add(this.btnRight);
+
+            this.btnLeft = new Button
+            {
+                BackgroundImage = Properties.Resources.Left_icon,
+                BackgroundImageLayout = ImageLayout.Stretch,
+                Location = new Point(218, 378),
+                Name = "btnLeft",
+                Size = new Size(75, 56),
+                Visible = false
+            };
+            this.btnLeft.Click += new EventHandler(this.btnLeft_Click);
+            this.Controls.Add(this.btnLeft);
+
+            this.pictureBox2 = new PictureBox
+            {
+                BackColor = Color.Transparent,
+                Location = new Point(12, 12),
+                Name = "pictureBox2",
+                Size = new Size(710, 422),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Visible = false
+            };
+            this.Controls.Add(this.pictureBox2);
+
+            this.panel = new Panel
+            {
+                Name = "panel",
+                Location = new Point(218, 12),
+                Size = new Size(504, 422),
+                BackColor = Color.Transparent,
+                Visible = false,
+                AutoScroll = true
+            };
+            this.Controls.Add(this.panel);
+
+            this.timer.Interval = 1000;
+            this.pictures = new List<string>();
+        }
         private void btnViewPictures_Click(object sender, EventArgs e)
         {
             try
@@ -35,7 +103,6 @@ namespace Picture_Viewer
                 {
                     this.pictures.AddRange(picturesFiles.FileNames);
 
-                    this.listBox.Items.Clear();
                     this.listBox.Items.AddRange(picturesFiles.SafeFileNames);
                 }
             }
@@ -45,173 +112,223 @@ namespace Picture_Viewer
             }
             finally
             {
-                this.listBox.SelectedIndex = 0;
                 this.btnViewPictures.Enabled = true;
             }
         }
-
         private void btnRemovePicture_Click(object sender, EventArgs e)
         {
             try
             {
+                this.btnRemovePicture.Enabled = false;
                 var index = listBox.SelectedIndex;
                 this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
+                this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+                this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
                 this.listBox.Items.RemoveAt(index);
                 this.pictures.RemoveAt(index);
+
+                if (this.listBox.Items.Count < 1)
+                {
+                    this.defaultMode_Click(sender, e);
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There isn't any pictures", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                this.defaultMode_Click(sender, e);
+            }
+            finally
+            {
+                this.btnRemovePicture.Enabled = true;
             }
         }
-
         private void btnRemoveAllPictures_Click(object sender, EventArgs e)
         {
+            this.btnRemoveAllPictures.Enabled = false;
+            this.defaultMode_Click(sender, e);
             this.listBox.Items.Clear();
             this.pictures.Clear();
+            this.btnRemoveAllPictures.Enabled = true;
         }
-
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            this.listBox.SelectedIndex = this.listBox.SelectedIndex == 0 ? this.listBox.Items.Count - 1 : this.listBox.SelectedIndex - 1;
+            this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+        }
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
+            this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+        }
         private void defaultMode_Click(object sender, EventArgs e)
         {
+            this.listBox.SelectionMode = SelectionMode.None;
+
             this.defaultMode.Visible = false;
 
             this.singleMode.Visible = true;
             this.slideshowMode.Visible = true;
             this.multiPictureMode.Visible = true;
 
+            this.toolStripStatus.Visible = false;
+
+            this.timer.Stop();
+            this.panel.Controls.Clear();
+
+            this.panel.Visible = false;
             this.btnLeft.Visible = false;
             this.btnRight.Visible = false;
-            this.pictureBox.Visible = false;
-        }
+            this.pictureBox1.Visible = false;
+            this.pictureBox2.Visible = false;
 
+            this.listBox.Visible = true;
+            this.btnViewPictures.Visible = true;
+            this.btnRemovePicture.Visible = true;
+            this.btnRemoveAllPictures.Visible = true;
+        }
         private void singleMode_Click(object sender, EventArgs e)
         {
             if (this.listBox.Items.Count < 1)
             {
-                MessageBox.Show("Please select one or more pictures to view", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select one or more picture to view", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
-            this.listBox.SelectionMode = SelectionMode.One;
 
-            if (this.listBox.SelectedIndex == -1)
-            {
-                this.listBox.SelectedIndex = 0;
-            }
+            this.listBox.SelectionMode = SelectionMode.One;
+            this.listBox.SelectedIndex = 0;
+
+            this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+
+            this.toolStripStatus.Visible = true;
+            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
 
             this.singleMode.Visible = false;
             this.slideshowMode.Visible = false;
             this.multiPictureMode.Visible = false;
 
-            this.defaultMode = new ToolStripMenuItem
-            {
-                Name = "defaultMode",
-                Size = new Size(155, 22),
-                Text = "Default Mode"
-            };
-            this.defaultMode.Click += new EventHandler(this.defaultMode_Click);
-            this.operationalModes.Items.Add(this.defaultMode);
-
-            this.pictureBox = new PictureBox
-            {
-                BackColor = Color.Transparent,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(198, 12),
-                Name = "pictureBox",
-                Size = new Size(468, 368),
-                SizeMode = PictureBoxSizeMode.Zoom,
-                TabIndex = 3,
-                TabStop = false,
-                Visible = true,
-                ImageLocation = this.pictures[this.listBox.SelectedIndex]
-            };
-            this.Controls.Add(this.pictureBox);
-
-            this.btnLeft = new Button
-            {
-                BackgroundImage = Properties.Resources.Left_icon,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(198, 386),
-                Name = "btnLeft",
-                Size = new Size(75, 52),
-                TabIndex = 2,
-                Visible = true
-            };
-            this.btnLeft.Click += new EventHandler(this.btnLeft_Click);
-            this.Controls.Add(this.btnLeft);
-
-            this.btnRight = new Button
-            {
-                BackgroundImage = Properties.Resources.Right_icon,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(591, 386),
-                Name = "btnRight",
-                Size = new Size(75, 52),
-                TabIndex = 1,
-                Visible = true
-            };
-            this.btnRight.Click += new EventHandler(this.btnRight_Click);
-            this.Controls.Add(this.btnRight);
+            this.btnLeft.Visible = true;
+            this.btnRight.Visible = true;
+            this.pictureBox1.Visible = true;
+            this.defaultMode.Visible = true;
         }
-
-        private void btnLeft_Click(object sender, EventArgs e)
+        private void multiPictureMode_Click(object sender, EventArgs e)
         {
-            this.listBox.SelectedIndex = this.listBox.SelectedIndex == 0 ? this.listBox.Items.Count - 1 : this.listBox.SelectedIndex - 1;
-
-            this.pictureBox.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-        }
-
-        private void btnRight_Click(object sender, EventArgs e)
-        {
-            this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
-
-            this.pictureBox.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-        }
-
-        private void ViewPictures(List<string> pictures)
-        {
-            if (this.pictureBox == null || this.pictureBox.Visible == false)
+            if (this.listBox.Items.Count < 1)
             {
-                MessageBox.Show("Please select operational mode to view", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (pictures.Count == 1)
-            {
-                this.pictureBox.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+                MessageBox.Show("Please select one or more picture to view", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            this.panel.Visible = true;
+
+            this.listBox.SelectionMode = SelectionMode.MultiExtended;
+
+            this.defaultMode.Visible = true;
+
+            this.singleMode.Visible = false;
+            this.slideshowMode.Visible = false;
+            this.multiPictureMode.Visible = false;
+
+            this.toolStripStatus.Visible = false;
         }
-
-        private List<string> GetSelectedPictures()
+        private void slideshowMode_Click(object sender, EventArgs e)
         {
-            var selectedPictures = new List<string>();
-
-            foreach (int index in listBox.SelectedIndices)
+            if (this.listBox.Items.Count < 1)
             {
-                selectedPictures.Add(pictures[index]);
+                MessageBox.Show("Please select one or more picture to view", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            return selectedPictures;
+            this.listBox.SelectionMode = SelectionMode.One;
+            this.listBox.SelectedIndex = 0;
+
+            this.pictureBox2.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+
+            this.toolStripStatus.Visible = true;
+            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+
+            this.defaultMode.Visible = true;
+            this.pictureBox2.Visible = true;
+
+            this.singleMode.Visible = false;
+            this.slideshowMode.Visible = false;
+            this.multiPictureMode.Visible = false;
+
+            this.listBox.Visible = false;
+            this.btnViewPictures.Visible = false;
+            this.btnRemovePicture.Visible = false;
+            this.btnRemoveAllPictures.Visible = false;
+
+            this.timer.Start();
         }
-
-        private void ListBox_MouseClick(object sender, EventArgs e)
-        {
-            ViewPictures(GetSelectedPictures());
-        }
-
-        private List<string> pictures;
-
-        private Button btnLeft;
-        private Button btnRight;
-
-        private PictureBox pictureBox;
-
-        private ToolStripMenuItem defaultMode;
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (MessageBox.Show("Are You Sure you want to exit?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
+        private void ListBox_MouseClick(object sender, EventArgs e)
+        {
+            if (this.pictureBox1.Visible)
+            {
+                this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+                this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+                return;
+            }
+            if (this.listBox.SelectedIndices.Count == 1)
+            {
+                this.panel.Controls.Clear();
+
+                this.panel.Controls.Add(new PictureBox
+                {
+                    BackColor = Color.Transparent,
+                    Top = 6,
+                    Left = 6,
+                    Width = 244,
+                    Height = 244,
+                    Name = "pictureBox0",
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    Visible = true,
+                    ImageLocation = this.pictures[this.listBox.SelectedIndex]
+                });
+                return;
+            }
+
+            this.panel.Controls.Clear();
+
+            for (int i = 0; i < this.listBox.SelectedIndices.Count; i++)
+            {
+                this.panel.Controls.Add(new PictureBox
+                {
+                    BackColor = Color.Transparent,
+                    Top = 6 + (250 * (i / 2)),
+                    Left = 6 + (250 * (i % 2)),
+                    Width = 244,
+                    Height = 244,
+                    Name = "pictureBox" + i,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    Visible = true,
+                    ImageLocation = this.pictures[this.listBox.SelectedIndices[i]]
+                });
+            }
+        }
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
+            this.pictureBox2.ImageLocation = this.pictures[this.listBox.SelectedIndex];
+            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+        }
+
+        private Panel panel;
+        private Button btnLeft;
+        private Button btnRight;
+        private List<string> pictures;
+        private PictureBox pictureBox1;
+        private PictureBox pictureBox2;
+        private ToolStripMenuItem defaultMode;
     }
 }
