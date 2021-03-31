@@ -36,10 +36,16 @@ namespace Picture_Viewer
             this.singleMode = new System.Windows.Forms.ToolStripMenuItem();
             this.multiPictureMode = new System.Windows.Forms.ToolStripMenuItem();
             this.slideshowMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultMode = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox = new System.Windows.Forms.ListBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnRight = new System.Windows.Forms.Button();
             this.btnViewPictures = new System.Windows.Forms.Button();
             this.btnRemovePicture = new System.Windows.Forms.Button();
             this.btnRemoveAllPictures = new System.Windows.Forms.Button();
+            this.panel = new System.Windows.Forms.Panel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -54,6 +60,7 @@ namespace Picture_Viewer
             this.exit,
             this.singleMode,
             this.multiPictureMode,
+            this.defaultMode,
             this.slideshowMode});
             this.operationalModes.Name = "contextMenuStrip";
             this.operationalModes.ShowImageMargin = false;
@@ -88,6 +95,14 @@ namespace Picture_Viewer
             this.slideshowMode.Text = "Slideshow mode";
             this.slideshowMode.Click += new System.EventHandler(this.slideshowMode_Click);
             // 
+            // defaultMode
+            // 
+            this.defaultMode.Name = "defaultMode";
+            this.defaultMode.Size = new System.Drawing.Size(155, 22);
+            this.defaultMode.Text = "Default Mode";
+            this.defaultMode.Visible = false;
+            this.defaultMode.Click += new System.EventHandler(this.defaultMode_Click);
+            // 
             // listBox
             // 
             this.listBox.FormattingEnabled = true;
@@ -97,6 +112,44 @@ namespace Picture_Viewer
             this.listBox.Size = new System.Drawing.Size(200, 329);
             this.listBox.TabIndex = 2;
             this.listBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListBox_MouseClick);
+            //
+            // pictureBox1
+            //
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Location = new System.Drawing.Point(218, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(504, 360);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.Visible = false;
+            //
+            // pictureBox2
+            //
+            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox2.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(710, 422);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.Visible = false;
+            // 
+            // btnRight
+            // 
+            this.btnRight.Name = "btnRight";
+            this.btnRight.BackgroundImage = Properties.Resources.Right_icon;
+            this.btnRight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnRight.Location = new System.Drawing.Point(647, 378);
+            this.btnRight.Size = new System.Drawing.Size(75, 56);
+            this.btnRight.Visible = false;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.BackgroundImage = Properties.Resources.Left_icon;
+            this.btnLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnLeft.Location = new System.Drawing.Point(218, 378);
+            this.btnLeft.Size = new System.Drawing.Size(75, 56);
+            this.btnLeft.Visible = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnViewPictures
             // 
@@ -127,6 +180,15 @@ namespace Picture_Viewer
             this.btnRemoveAllPictures.Text = "Remove all pictures";
             this.btnRemoveAllPictures.UseVisualStyleBackColor = true;
             this.btnRemoveAllPictures.Click += new System.EventHandler(this.btnRemoveAllPictures_Click);
+            //
+            // panel
+            //
+            this.panel.Name = "panel";
+            this.panel.Location = new System.Drawing.Point(218, 12);
+            this.panel.Size = new System.Drawing.Size(504, 422);
+            this.panel.BackColor = System.Drawing.Color.Transparent;
+            this.panel.Visible = false;
+            this.panel.AutoScroll = true;
             // 
             // statusStrip
             // 
@@ -161,11 +223,17 @@ namespace Picture_Viewer
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(734, 461);
             this.ContextMenuStrip = this.operationalModes;
-            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.panel);
             this.Controls.Add(this.listBox);
+            this.Controls.Add(this.btnLeft);
+            this.Controls.Add(this.btnRight);
+            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.btnViewPictures);
             this.Controls.Add(this.btnRemovePicture);
             this.Controls.Add(this.btnRemoveAllPictures);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Viewer";
             this.Text = "Picture Viewer";
@@ -179,18 +247,32 @@ namespace Picture_Viewer
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip operationalModes;
-        private System.Windows.Forms.ToolStripMenuItem singleMode;
-        private System.Windows.Forms.ToolStripMenuItem slideshowMode;
-        private System.Windows.Forms.ToolStripMenuItem multiPictureMode;
+        private System.Windows.Forms.Panel panel;
+
         private System.Windows.Forms.ListBox listBox;
+
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+
+        private System.Windows.Forms.Button btnLeft;
+        private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Button btnViewPictures;
         private System.Windows.Forms.Button btnRemovePicture;
         private System.Windows.Forms.Button btnRemoveAllPictures;
+
+        private System.Windows.Forms.ContextMenuStrip operationalModes;
+
         private System.Windows.Forms.ToolStripMenuItem exit;
+        private System.Windows.Forms.ToolStripMenuItem singleMode;
+        private System.Windows.Forms.ToolStripMenuItem defaultMode;
+        private System.Windows.Forms.ToolStripMenuItem slideshowMode;
+        private System.Windows.Forms.ToolStripMenuItem multiPictureMode;
+
         private System.Windows.Forms.StatusStrip statusStrip;
+
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatus;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+
         private System.Windows.Forms.Timer timer;
     }
 }

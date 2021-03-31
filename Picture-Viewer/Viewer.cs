@@ -17,74 +17,6 @@ namespace Picture_Viewer
         {
             this.InitializeComponent();
 
-            this.defaultMode = new ToolStripMenuItem
-            {
-                Name = "defaultMode",
-                Size = new Size(155, 22),
-                Text = "Default Mode",
-                Visible = false
-            };
-            this.defaultMode.Click += new EventHandler(this.defaultMode_Click);
-            this.operationalModes.Items.Add(this.defaultMode);
-
-            this.pictureBox1 = new PictureBox
-            {
-                BackColor = Color.Transparent,
-                Location = new Point(218, 12),
-                Name = "pictureBox1",
-                Size = new Size(504, 360),
-                SizeMode = PictureBoxSizeMode.Zoom,
-                Visible = false
-            };
-            this.Controls.Add(this.pictureBox1);
-
-            this.btnRight = new Button
-            {
-                BackgroundImage = Properties.Resources.Right_icon,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(647, 378),
-                Name = "btnRight",
-                Size = new Size(75, 56),
-                Visible = false
-            };
-            this.btnRight.Click += new EventHandler(this.btnRight_Click);
-            this.Controls.Add(this.btnRight);
-
-            this.btnLeft = new Button
-            {
-                BackgroundImage = Properties.Resources.Left_icon,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(218, 378),
-                Name = "btnLeft",
-                Size = new Size(75, 56),
-                Visible = false
-            };
-            this.btnLeft.Click += new EventHandler(this.btnLeft_Click);
-            this.Controls.Add(this.btnLeft);
-
-            this.pictureBox2 = new PictureBox
-            {
-                BackColor = Color.Transparent,
-                Location = new Point(12, 12),
-                Name = "pictureBox2",
-                Size = new Size(710, 422),
-                SizeMode = PictureBoxSizeMode.Zoom,
-                Visible = false
-            };
-            this.Controls.Add(this.pictureBox2);
-
-            this.panel = new Panel
-            {
-                Name = "panel",
-                Location = new Point(218, 12),
-                Size = new Size(504, 422),
-                BackColor = Color.Transparent,
-                Visible = false,
-                AutoScroll = true
-            };
-            this.Controls.Add(this.panel);
-
-            this.timer.Interval = 1000;
             this.pictures = new List<string>();
         }
         private void btnViewPictures_Click(object sender, EventArgs e)
@@ -323,12 +255,6 @@ namespace Picture_Viewer
             this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
         }
 
-        private Panel panel;
-        private Button btnLeft;
-        private Button btnRight;
         private List<string> pictures;
-        private PictureBox pictureBox1;
-        private PictureBox pictureBox2;
-        private ToolStripMenuItem defaultMode;
     }
 }
