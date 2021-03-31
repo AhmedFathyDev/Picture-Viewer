@@ -23,7 +23,6 @@ namespace Picture_Viewer
         {
             try
             {
-                this.btnViewPictures.Enabled = false;
                 var picturesFiles = new OpenFileDialog
                 {
                     Title = "Select view pictures",
@@ -34,17 +33,12 @@ namespace Picture_Viewer
                 if (picturesFiles.ShowDialog() == DialogResult.OK)
                 {
                     this.pictures.AddRange(picturesFiles.FileNames);
-
                     this.listBox.Items.AddRange(picturesFiles.SafeFileNames);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                this.btnViewPictures.Enabled = true;
             }
         }
         private void ListBox_MouseClick(object sender, EventArgs e)
@@ -101,7 +95,6 @@ namespace Picture_Viewer
         {
             try
             {
-                this.btnRemovePicture.Enabled = false;
                 var index = listBox.SelectedIndex;
                 this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
                 this.pictures.RemoveAt(index);
@@ -110,10 +103,6 @@ namespace Picture_Viewer
             catch (Exception)
             {
                 MessageBox.Show("There isn't any pictures", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                this.btnRemovePicture.Enabled = true;
             }
         }
         private void btnRemoveAllPictures_Click(object sender, EventArgs e)
@@ -124,10 +113,8 @@ namespace Picture_Viewer
                 return;
             }
 
-            this.btnRemoveAllPictures.Enabled = false;
             this.listBox.Items.Clear();
             this.pictures.Clear();
-            this.btnRemoveAllPictures.Enabled = true;
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
