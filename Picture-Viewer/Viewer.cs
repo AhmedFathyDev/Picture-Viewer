@@ -29,6 +29,8 @@ namespace Picture_Viewer
                     this.pictures.AddRange(picturesFiles.FileNames);
                     this.listBox.Items.AddRange(picturesFiles.SafeFileNames);
                 }
+
+                this.listBox.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -44,7 +46,7 @@ namespace Picture_Viewer
             if (this.panel.Visible == false)
             {
                 this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-                this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+                this.pictureName.Text = this.listBox.SelectedItem.ToString();
                 return;
             }
             if (this.listBox.SelectedIndices.Count == 1)
@@ -131,13 +133,15 @@ namespace Picture_Viewer
             this.slideshowMode.Visible = false;
             this.multiPictureMode.Visible = false;
 
+            this.operationalMode.Text = "Single mode";
+
             this.listBox.Height = 394;
 
             this.pictureBox1.Visible = true;
             this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
 
-            this.toolStripStatus.Visible = true;
-            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+            this.pictureName.Visible = true;
+            this.pictureName.Text = this.listBox.SelectedItem.ToString();
 
             this.btnLeft.Visible = true;
             this.btnRight.Visible = true;
@@ -159,6 +163,8 @@ namespace Picture_Viewer
             this.slideshowMode.Visible = false;
             this.multiPictureMode.Visible = false;
 
+            this.operationalMode.Text = "Multi-Pictures mode";
+
             this.panel.Visible = true;
 
             this.listBox.Height = 394;
@@ -166,7 +172,6 @@ namespace Picture_Viewer
 
             this.ListBox_MouseClick(sender, e);
 
-            this.toolStripStatus.Visible = false;
             this.btnRemovePicture.Visible = false;
             this.btnRemoveAllPictures.Visible = false;
         }
@@ -184,6 +189,8 @@ namespace Picture_Viewer
             this.slideshowMode.Visible = false;
             this.multiPictureMode.Visible = false;
 
+            this.operationalMode.Text = "Slideshow mode";
+
             this.listBox.Visible = false;
 
             this.btnViewPictures.Visible = false;
@@ -193,8 +200,8 @@ namespace Picture_Viewer
             this.pictureBox2.Visible = true;
             this.pictureBox2.ImageLocation = this.pictures[this.listBox.SelectedIndex];
 
-            this.toolStripStatus.Visible = true;
-            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+            this.pictureName.Visible = true;
+            this.pictureName.Text = this.listBox.SelectedItem.ToString();
 
             this.timer.Start();
         }
@@ -203,14 +210,14 @@ namespace Picture_Viewer
             this.listBox.SelectedIndex = this.listBox.SelectedIndex == 0 ? this.listBox.Items.Count - 1 : this.listBox.SelectedIndex - 1;
             
             this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+            this.pictureName.Text = this.listBox.SelectedItem.ToString();
         }
         private void btnRight_Click(object sender, EventArgs e)
         {
             this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
             
             this.pictureBox1.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+            this.pictureName.Text = this.listBox.SelectedItem.ToString();
         }
         private void defaultMode_Click(object sender, EventArgs e)
         {
@@ -219,6 +226,8 @@ namespace Picture_Viewer
             this.singleMode.Visible = true;
             this.slideshowMode.Visible = true;
             this.multiPictureMode.Visible = true;
+
+            this.operationalMode.Text = "Default mode";
 
             this.listBox.Height = 329;
             this.listBox.Visible = true;
@@ -233,7 +242,7 @@ namespace Picture_Viewer
             this.btnRight.Visible = false;
             this.pictureBox1.Visible = false;
             this.pictureBox2.Visible = false;
-            this.toolStripStatus.Visible = false;
+            this.pictureName.Visible = false;
 
             this.btnViewPictures.Visible = true;
             this.btnRemovePicture.Visible = true;
@@ -244,7 +253,7 @@ namespace Picture_Viewer
             this.listBox.SelectedIndex = this.listBox.SelectedIndex + 1 == this.listBox.Items.Count ? 0 : this.listBox.SelectedIndex + 1;
             
             this.pictureBox2.ImageLocation = this.pictures[this.listBox.SelectedIndex];
-            this.toolStripStatus.Text = this.listBox.SelectedItem.ToString();
+            this.pictureName.Text = this.listBox.SelectedItem.ToString();
         }
 
         private List<string> pictures;
