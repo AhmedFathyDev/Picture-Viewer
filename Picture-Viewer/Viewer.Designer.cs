@@ -217,7 +217,7 @@ namespace Picture_Viewer
             // 
             // timer
             // 
-            this.timer.Interval = 1000;
+            this.timer.Interval = 100;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // space2

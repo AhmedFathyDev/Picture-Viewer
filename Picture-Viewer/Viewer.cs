@@ -302,6 +302,7 @@ namespace Picture_Viewer
             if (this.listBox.SelectedIndex + 1 == this.listBox.Items.Count)
             {
                 this.timer.Stop();
+                return;
             }
 
             this.pictureBox2.ImageLocation = this.pictures[++this.listBox.SelectedIndex];
