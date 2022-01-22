@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a479ca8a-794c-42a5-87e2-3c70a90e3681": {
+      "ProjectGuid": "a479ca8a-794c-42a5-87e2-3c70a90e3681",
+      "DisplayName": "Picture-Viewer",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
